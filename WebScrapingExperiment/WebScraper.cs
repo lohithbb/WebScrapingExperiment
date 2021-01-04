@@ -85,6 +85,11 @@ namespace WebScrapingExperiment
             return Task.FromResult(listOfChapterUrls);
         }
 
+        /// <summary>
+        ///     Gets the chapter name
+        /// </summary>
+        /// <param name="urlChapter"></param>
+        /// <returns>string</returns>
         public string ExtractChapterTitle(string urlChapter)
         {
             var response = GetWebpageAsync(urlChapter).Result;
@@ -97,13 +102,19 @@ namespace WebScrapingExperiment
             return chapterTitle;
         }
 
+        /// <summary>
+        ///     Returns the text in HTML element '#chapter-content'
+        ///     Collapses the string array into single string separated by newlines
+        /// </summary>
+        /// <param name="urlChapter"></param>
+        /// <returns>string</returns>
         public string ExtractChapterContent(string urlChapter)
         {
             var response = GetWebpageAsync(urlChapter).Result;
 
             var chapterContentAsList = response
-                //.QuerySelector("#chapter-content")
-                .QuerySelectorAll("#chapter-content > p")
+                .QuerySelector("#chapter-content")
+                .QuerySelectorAll("p")
                 .Select(x => x.TextContent)
                 .ToList()
                 ;

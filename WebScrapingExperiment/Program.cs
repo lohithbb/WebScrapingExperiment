@@ -6,7 +6,7 @@ namespace WebScrapingExperiment
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             #region Initial Trials
 
@@ -14,7 +14,7 @@ namespace WebScrapingExperiment
             //var url = "https://novelfull.com/release-that-witch.html";
 
             //// create the webscraper object
-            var webScraper = new WebScraper();
+            //var webScraper = new WebScraper();
 
             //// get the page as an IDocument
             //var document = webScraper.GetWebpageAsync(url).Result;
@@ -61,30 +61,54 @@ namespace WebScrapingExperiment
 
             #region Experiment - Get content in one chapter
 
-            var inputWorkingWith = "https://novelfull.com/release-that-witch/chapter-1-from-today-onwards-i-am-a-royal-prince.html";
+            //var inputWorkingWith = "https://novelfull.com/release-that-witch/chapter-1226-the-prison-of-the-heart.html";
 
             //var webScraper = new WebScraper();
-            var chapterContent = webScraper.ExtractChapterContent(inputWorkingWith);
+            //var chapterContent = webScraper.ExtractChapterContent(inputWorkingWith);
 
-            // sanitise
-            // remove leading/trailing whitespace/newlines
-            chapterContent = chapterContent.Trim(System.Environment.NewLine.ToCharArray());
+            //// sanitise
+            //// remove leading/trailing whitespace/newlines
+            //chapterContent = chapterContent.Trim(System.Environment.NewLine.ToCharArray());
 
-            // markdown treats 2 newlines as a new line ...
-            chapterContent = chapterContent.Replace(System.Environment.NewLine, System.Environment.NewLine + System.Environment.NewLine);
+            //// markdown treats 2 newlines as a new line ...
+            //chapterContent = chapterContent.Replace(System.Environment.NewLine, System.Environment.NewLine + System.Environment.NewLine);
 
-            // write file to disk
-            System.IO.File.WriteAllText("experimentchapter.md", chapterContent);
+            //// write file to disk
+            //System.IO.File.WriteAllText("experimentchapter.md", chapterContent);
 
             #endregion Experiment - Get content in one chapter
 
-            //var urls = System.IO.File.ReadAllLines("chapterUrls.txt");
+            #region Get content for all chapters
 
-            // get each chapter and save it
-            //foreach (var chapterUrl in chapterUrls)
-            //{
-            //    var chapterContent =
-            //}
+            // read chapter URLs from saved file (stored a copy of this)
+            var chapterUrls = System.IO.File.ReadAllLines("chapterUrls.txt");
+
+            var webScraper = new WebScraper();
+
+            //get each chapter and save it
+            foreach (var chapterUrl in chapterUrls)
+            {
+                // get chapter title for file name
+                //var chapterTitle = webScraper.ExtractChapterTitle(chapterUrl);
+                // this was not fit for purpose as its not guarenteed to be safe; better to use the URL
+                var chapterTitle = chapterUrl.Split('/').Last().Replace(".html", "");
+
+                var chapterContent = webScraper.ExtractChapterContent(chapterUrl);
+
+                // sanitise
+                // remove leading/trailing whitespace/newlines
+                chapterContent = chapterContent.Trim(System.Environment.NewLine.ToCharArray());
+
+                // markdown treats 2 newlines as a new line ...
+                chapterContent = chapterContent.Replace(System.Environment.NewLine, System.Environment.NewLine + System.Environment.NewLine);
+
+                // write file to disk
+                System.IO.File.WriteAllText($"{chapterTitle}.txt", chapterContent);
+            }
+
+            #endregion
         }
+
+
     }
 }
