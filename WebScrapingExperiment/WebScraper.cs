@@ -112,8 +112,15 @@ namespace WebScrapingExperiment
         {
             var response = GetWebpageAsync(urlChapter).Result;
 
+            //var chapterContentAsList = response
+            //    .QuerySelector("#chapter-content")
+            //    .QuerySelectorAll("p")
+            //    .Select(x => x.TextContent)
+            //    .ToList()
+            //    ;
+
             var chapterContentAsList = response
-                .QuerySelector("#chapter-content")
+                .QuerySelector("#chr-content")
                 .QuerySelectorAll("p")
                 .Select(x => x.TextContent)
                 .ToList()
